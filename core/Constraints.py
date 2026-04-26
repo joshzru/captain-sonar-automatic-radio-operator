@@ -1,4 +1,4 @@
-# core/Restraints.py
+# core/constraints.py
 from dataclasses import dataclass
 
 from enums.hit_type import hit_type
@@ -40,10 +40,10 @@ class Constraints:
     def __init__(self, sonar: list[Sonar] = None, drone: list[Drone] = None, hit: list[Hit] = None, surface: list[Surface] = None,
                  silenced: bool = False):
 
-        self._sonar = list() if sonar is None else sonar
-        self._drone = list() if drone is None else drone
-        self._hit = list() if hit is None else hit
-        self._surface = list() if surface is None else surface
+        self._sonar = list() if sonar is None else list(sonar)
+        self._drone = list() if drone is None else list(drone)
+        self._hit = list() if hit is None else list(hit)
+        self._surface = list() if surface is None else list(surface)
         self._silenced = silenced
 
 
@@ -59,13 +59,13 @@ class Constraints:
 
 
     def check_sonar(self, row: int, col: int, sec: int) -> bool:
-        """validates a set of sonar restraints against the given values.
+        """validates a set of sonar constraints against the given values.
 
-        Each restraint must have exactly one field set to -1. This function checks that,
-        for each restraint, the two specified (non -1) values do not both match the
+        Each constraint must have exactly one field set to -1. This function checks that,
+        for each constraint, the two specified (non -1) values do not both match the
         corresponding arguments
 
-        Returns True if all restraints pass the check; otherwise, returns False.
+        Returns True if all constraints pass the check; otherwise, returns False.
 
         Args:
             row (int): The given row
@@ -73,10 +73,10 @@ class Constraints:
             sec (int): The given sector
 
         Returns:
-            bool: Whether the restraint holds true (false if violated).
+            bool: Whether the constraint holds true (false if violated).
         """
-        for restraint in self._sonar:
-            r, c, s = restraint.row, restraint.col, restraint.sec
+        for constraint in self._sonar:
+            r, c, s = constraint.row, constraint.col, constraint.sec
 
             if r == -1 and not ((col == c) ^ (sec == s)):
                 return False
@@ -99,8 +99,8 @@ class Constraints:
 
 
     def check_drone(self, sec: int) -> bool:
-        for restraint in self._drone:
-            if restraint.valid == (restraint.sec != sec):
+        for constraint in self._drone:
+            if constraint.valid == (constraint.sec != sec):
                 return False
 
         return True
@@ -120,21 +120,21 @@ class Constraints:
 
 
     def check_hit(self, row: int, col: int) -> bool:
-        for restraint in self._hit:
-            match restraint.hit:
+        for constraint in self._hit:
+            match constraint.hit:
                 case hit_type.MISS:
                     # Must not be within 1 Tile of the hit
-                    if abs(row - restraint.row) <= 1 and abs(col - restraint.col) <= 1:
+                    if abs(row - constraint.row) <= 1 and abs(col - constraint.col) <= 1:
                         return False
                 case hit_type.INDIRECT:
                     # Must be within 1 tile of the hit, but not exactly where the hit is
-                    if (row, col) == (restraint.row, restraint.col):
+                    if (row, col) == (constraint.row, constraint.col):
                         return False
-                    elif abs(row - restraint.row) > 1 or abs(col - restraint.col) > 1:
+                    elif abs(row - constraint.row) > 1 or abs(col - constraint.col) > 1:
                         return False
                 case hit_type.DIRECT:
                     # Must be exactly where the hit is
-                    if row != restraint.row or col != restraint.col:
+                    if row != constraint.row or col != constraint.col:
                         return False
                 case _:
                     raise ValueError("Invalid hit type")
@@ -150,7 +150,7 @@ class Constraints:
 
 
     def check_surface(self, sec: int) -> bool:
-        return all(sec == restraint.sec for restraint in self._surface)
+        return all(sec == constraint.sec for constraint in self._surface)
 
 
     def check_constraints(self, row: int, col: int, sec: int) -> bool:
