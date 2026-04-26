@@ -8,40 +8,40 @@ from enums.hit_type import hit_type
 
 
 @dataclass
-class Envelope(ABC):
+class Command(ABC):
     command: command_type
 
 
 @dataclass
-class DirectionCommand(Envelope):
+class DirectionCommand(Command):
     d: direction
 
 
 @dataclass
-class SonarCommand(Envelope):
+class SonarCommand(Command):
     row: int
     col: int
     sec: int
 
 
 @dataclass
-class DroneCommand(Envelope):
+class DroneCommand(Command):
     sec: int
     valid: bool
 
 
 @dataclass
-class HitCommand(Envelope):
+class HitCommand(Command):
     row: int
     col: int
     hit: hit_type
 
 
 @dataclass
-class SurfaceCommand(Envelope):
+class SurfaceCommand(Command):
     sec: int
 
 
 @dataclass
-class SilenceCommand(Envelope):
+class SilenceCommand(Command):
     pass

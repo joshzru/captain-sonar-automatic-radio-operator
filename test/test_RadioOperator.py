@@ -1,6 +1,6 @@
 import unittest
 
-from core import RadioOperator, Heading, Restraints, Sonar, Drone, Hit, Surface
+from core import RadioOperator, Heading, Constraints, Sonar, Drone, Hit, Surface
 from enums.direction import direction
 from enums.codes import codes
 
@@ -80,22 +80,22 @@ class TestRadioOperator(unittest.TestCase):
                 code: codes = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Incorrect code returned")
                 self.assertEqual(len(operator._route), 0, "There shouldn't be any headings")
-                self.assertEqual(len(operator._starting_restraints._sonar), 1, "One sonar restraint should exist")
-                self.assertEqual(operator._starting_restraints._sonar[0].col, 0, "Column value incorrect")
-                self.assertEqual(operator._starting_restraints._sonar[0].row, 0, "Row value incorrect")
-                self.assertEqual(operator._starting_restraints._sonar[0].sec, -1, "Sector value incorrect")
+                self.assertEqual(len(operator._starting_constraints._sonar), 1, "One sonar restraint should exist")
+                self.assertEqual(operator._starting_constraints._sonar[0].col, 0, "Column value incorrect")
+                self.assertEqual(operator._starting_constraints._sonar[0].row, 0, "Row value incorrect")
+                self.assertEqual(operator._starting_constraints._sonar[0].sec, -1, "Sector value incorrect")
                 
-                first_sonar: Sonar = operator._starting_restraints._sonar[0]
+                first_sonar: Sonar = operator._starting_constraints._sonar[0]
                 
                 args = [column_text + "-B", row_text + "-2"]
                 code = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Incorrect code returned")
                 self.assertEqual(len(operator._route), 0, "There shouldn't be any headings")
-                self.assertEqual(len(operator._starting_restraints._sonar), 2, "Two sonar restraints should exist")
-                self.assertIs(first_sonar, operator._starting_restraints._sonar[0], "First sonar restraint should remain the same")
-                self.assertEqual(operator._starting_restraints._sonar[1].col, 1, "Column value incorrect")
-                self.assertEqual(operator._starting_restraints._sonar[1].row, 1, "Row value incorrect")
-                self.assertEqual(operator._starting_restraints._sonar[1].sec, -1, "Sector value incorrect")
+                self.assertEqual(len(operator._starting_constraints._sonar), 2, "Two sonar restraints should exist")
+                self.assertIs(first_sonar, operator._starting_constraints._sonar[0], "First sonar restraint should remain the same")
+                self.assertEqual(operator._starting_constraints._sonar[1].col, 1, "Column value incorrect")
+                self.assertEqual(operator._starting_constraints._sonar[1].row, 1, "Row value incorrect")
+                self.assertEqual(operator._starting_constraints._sonar[1].sec, -1, "Sector value incorrect")
         
         for row_text in ("row", "r"):
             for sector_text in ("sector", "sec", "s"):
@@ -108,22 +108,22 @@ class TestRadioOperator(unittest.TestCase):
                 code: codes = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Icorrect code returned")
                 self.assertEqual(len(operator._route), 1, "There should only be one heading")
-                self.assertEqual(len(operator._route[0].restraints._sonar), 1, "There should only be one sonar restraint")
-                self.assertEqual(operator._route[0].restraints._sonar[0].col, -1, "Column value incorrect")
-                self.assertEqual(operator._route[0].restraints._sonar[0].row, 0, "Row value incorrect")
-                self.assertEqual(operator._route[0].restraints._sonar[0].sec, 1, "Sector value incorrect")
+                self.assertEqual(len(operator._route[0].constraints._sonar), 1, "There should only be one sonar restraint")
+                self.assertEqual(operator._route[0].constraints._sonar[0].col, -1, "Column value incorrect")
+                self.assertEqual(operator._route[0].constraints._sonar[0].row, 0, "Row value incorrect")
+                self.assertEqual(operator._route[0].constraints._sonar[0].sec, 1, "Sector value incorrect")
                 
-                first_sonar: Sonar = operator._route[0].restraints._sonar[0]
+                first_sonar: Sonar = operator._route[0].constraints._sonar[0]
                 
                 args = [sector_text + "-2", row_text + "-2"]
                 code = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Incorrect code returned")
                 self.assertEqual(len(operator._route), 1, "there should only be one heading")
-                self.assertEqual(len(operator._route[0].restraints._sonar), 2, "There should only be two sonar restraints")
-                self.assertIs(operator._route[0].restraints._sonar[0], first_sonar, "First sonar restraint should remain the same")
-                self.assertEqual(operator._route[0].restraints._sonar[1].col, -1, "Column value incorrect")
-                self.assertEqual(operator._route[0].restraints._sonar[1].row, 1, "Row value incorrect")
-                self.assertEqual(operator._route[0].restraints._sonar[1].sec, 2, "Sector value incorrect")
+                self.assertEqual(len(operator._route[0].constraints._sonar), 2, "There should only be two sonar restraints")
+                self.assertIs(operator._route[0].constraints._sonar[0], first_sonar, "First sonar restraint should remain the same")
+                self.assertEqual(operator._route[0].constraints._sonar[1].col, -1, "Column value incorrect")
+                self.assertEqual(operator._route[0].constraints._sonar[1].row, 1, "Row value incorrect")
+                self.assertEqual(operator._route[0].constraints._sonar[1].sec, 2, "Sector value incorrect")
         
         for column_text in ("column", "col", "c"):
             for sector_text in ("sector", "sec", "s"):
@@ -137,22 +137,22 @@ class TestRadioOperator(unittest.TestCase):
                 code: codes = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Icorrect code returned")
                 self.assertEqual(len(operator._route), 2, "There should only be two headings")
-                self.assertEqual(len(operator._route[1].restraints._sonar), 1, "There should only be one sonar restraint")
-                self.assertEqual(operator._route[1].restraints._sonar[0].col, 2, "Column value incorrect")
-                self.assertEqual(operator._route[1].restraints._sonar[0].row, -1, "Row value incorrect")
-                self.assertEqual(operator._route[1].restraints._sonar[0].sec, 3, "Sector value incorrect")
+                self.assertEqual(len(operator._route[1].constraints._sonar), 1, "There should only be one sonar restraint")
+                self.assertEqual(operator._route[1].constraints._sonar[0].col, 2, "Column value incorrect")
+                self.assertEqual(operator._route[1].constraints._sonar[0].row, -1, "Row value incorrect")
+                self.assertEqual(operator._route[1].constraints._sonar[0].sec, 3, "Sector value incorrect")
                 
-                first_sonar: Sonar = operator._route[1].restraints._sonar[0]
+                first_sonar: Sonar = operator._route[1].constraints._sonar[0]
                 
                 args = [sector_text + "-4", column_text + "-D"]
                 code = operator.execute_sonar(args)
                 self.assertEqual(code, codes.SONAR_ADDED, "Incorrect code returned")
                 self.assertEqual(len(operator._route), 2, "there should only be two headings")
-                self.assertEqual(len(operator._route[1].restraints._sonar), 2, "There should only be two sonar restraints")
-                self.assertIs(operator._route[1].restraints._sonar[0], first_sonar, "First sonar restraint should remain the same")
-                self.assertEqual(operator._route[1].restraints._sonar[1].col, 3, "Column value incorrect")
-                self.assertEqual(operator._route[1].restraints._sonar[1].row, -1, "Row value incorrect")
-                self.assertEqual(operator._route[1].restraints._sonar[1].sec, 4, "Sector value incorrect")
+                self.assertEqual(len(operator._route[1].constraints._sonar), 2, "There should only be two sonar restraints")
+                self.assertIs(operator._route[1].constraints._sonar[0], first_sonar, "First sonar restraint should remain the same")
+                self.assertEqual(operator._route[1].constraints._sonar[1].col, 3, "Column value incorrect")
+                self.assertEqual(operator._route[1].constraints._sonar[1].row, -1, "Row value incorrect")
+                self.assertEqual(operator._route[1].constraints._sonar[1].sec, 4, "Sector value incorrect")
         
     def test_execute_drone(self):
         operator: RadioOperator = RadioOperator()
@@ -161,20 +161,20 @@ class TestRadioOperator(unittest.TestCase):
         code: codes = operator.execute_drone(args)
         self.assertEqual(code, codes.DRONE_ADDED, "Incorrect code returned")
         self.assertEqual(len(operator._route), 0, "There should be no headings")
-        self.assertEqual(len(operator._starting_restraints._drone), 1, "There should only be one drone restraint")
-        self.assertEqual(operator._starting_restraints._drone[0].valid, True, "Boolean value incorrect")
-        self.assertEqual(operator._starting_restraints._drone[0].sec, 5, "Sector value incorrect")
+        self.assertEqual(len(operator._starting_constraints._drone), 1, "There should only be one drone restraint")
+        self.assertEqual(operator._starting_constraints._drone[0].valid, True, "Boolean value incorrect")
+        self.assertEqual(operator._starting_constraints._drone[0].sec, 5, "Sector value incorrect")
         
-        first_drone: Drone = operator._starting_restraints._drone[0]
+        first_drone: Drone = operator._starting_constraints._drone[0]
         
         args = ["6", "false"]
         code = operator.execute_drone(args)
         self.assertEqual(code, codes.DRONE_ADDED, "Incorrect code returned")
         self.assertEqual(len(operator._route), 0, "There should be no headings")
-        self.assertEqual(len(operator._starting_restraints._drone), 2, "There should only be two drone restraints")
-        self.assertIs(operator._starting_restraints._drone[0], first_drone, "First drone restraint should remain the same")
-        self.assertEqual(operator._starting_restraints._drone[1].valid, False, "Boolean value incorrect")
-        self.assertEqual(operator._starting_restraints._drone[1].sec, 6, "Sector value incorrect")
+        self.assertEqual(len(operator._starting_constraints._drone), 2, "There should only be two drone restraints")
+        self.assertIs(operator._starting_constraints._drone[0], first_drone, "First drone restraint should remain the same")
+        self.assertEqual(operator._starting_constraints._drone[1].valid, False, "Boolean value incorrect")
+        self.assertEqual(operator._starting_constraints._drone[1].sec, 6, "Sector value incorrect")
         
         args = ["north"]
         operator.append_heading(args)
@@ -183,19 +183,19 @@ class TestRadioOperator(unittest.TestCase):
         code = operator.execute_drone(args)
         self.assertEqual(code, codes.DRONE_ADDED, "Incorrect code returned")
         self.assertEqual(len(operator._route), 1, "There should only be one heading")
-        self.assertEqual(len(operator._route[0].restraints._drone), 1, "There should only be one drone restraint")
-        self.assertEqual(operator._route[0].restraints._drone[0].valid, True, "Boolean value incorrect")
-        self.assertEqual(operator._route[0].restraints._drone[0].sec, 1, "Sector value incorrect")
+        self.assertEqual(len(operator._route[0].constraints._drone), 1, "There should only be one drone restraint")
+        self.assertEqual(operator._route[0].constraints._drone[0].valid, True, "Boolean value incorrect")
+        self.assertEqual(operator._route[0].constraints._drone[0].sec, 1, "Sector value incorrect")
         
-        first_drone = operator._route[0].restraints._drone[0]
+        first_drone = operator._route[0].constraints._drone[0]
         
         args = ["9", "false"]
         code = operator.execute_drone(args)
         self.assertEqual(code, codes.DRONE_ADDED, "Incorrect code returned")
         self.assertEqual(len(operator._route), 1, "There should only be one heading")
-        self.assertEqual(len(operator._route[0].restraints._drone), 2, "There should only be two drone restraints")
-        self.assertEqual(operator._route[0].restraints._drone[1].valid, False, "Boolean value incorrect")
-        self.assertEqual(operator._route[0].restraints._drone[1].sec, 9, "Sector value incorrect")
+        self.assertEqual(len(operator._route[0].constraints._drone), 2, "There should only be two drone restraints")
+        self.assertEqual(operator._route[0].constraints._drone[1].valid, False, "Boolean value incorrect")
+        self.assertEqual(operator._route[0].constraints._drone[1].sec, 9, "Sector value incorrect")
         
     def test_execute_hit(self):
         ...

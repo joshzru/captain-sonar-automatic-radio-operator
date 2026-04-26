@@ -3,7 +3,7 @@ from .RadioOperator import RadioOperator
 from .CommandLine import CommandLine
 from .Map import Map
 from .Heading import Heading
-from .Restraints import Restraints, Sonar, Drone, Hit, Surface
+from .Constraints import Constraints, Sonar, Drone, Hit, Surface
 from .Trie import Trie
 from .Coordinate import Coordinate
 from .GameManager import GameManager

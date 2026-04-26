@@ -29,7 +29,7 @@ class Surface:
     sec: int
 
 
-class Restraints:
+class Constraints:
 
     _sonar: list[Sonar]
     _drone: list[Drone]
@@ -153,7 +153,7 @@ class Restraints:
         return all(sec == restraint.sec for restraint in self._surface)
 
 
-    def check_restraints(self, row: int, col: int, sec: int) -> bool:
+    def check_constraints(self, row: int, col: int, sec: int) -> bool:
         return (
             self.check_sonar(row, col, sec)
             and self.check_drone(sec)
